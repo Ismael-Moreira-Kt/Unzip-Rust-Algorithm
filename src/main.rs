@@ -16,4 +16,9 @@ fn real_main() -> i32 {
         
         return 1;
     }
+
+    let filename = std::path::Path::new(&*args[1]);
+    let file = fs::File::open(&filename).unwrap();
+
+    
 }
