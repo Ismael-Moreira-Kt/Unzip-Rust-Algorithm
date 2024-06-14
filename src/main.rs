@@ -33,6 +33,19 @@ fn real_main() -> i32 {
             Some(path) => path.to_owned(),
             None => continue,
         };
-        
+
+        if file.name().ends_with('/') {
+            println!("Directory extracted to \"{}\"", outpath.display());
+            fs::create_dir_all(&outpath).expect("Failed to create directory");
+        } else {
+            println!("File extracted to \"{}\" ({} bytes)", outpath.display(), file.size());
+            let parent = outpath.parent().expect("Failed to get parent directory");
+            fs::create_dir_all(parent).expect("Failed to create parent directories");
+
+            let outpath_clone = outpath.clone();
+            let mut outfile = File::create(outpath_clone).expect("Failed to create file");
+            copy(&mut file, &mut outfile).expect("Failed to copy file content");
+        }
+
     }
 }
