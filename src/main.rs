@@ -47,5 +47,12 @@ fn real_main() -> i32 {
             copy(&mut file, &mut outfile).expect("Failed to copy file content");
         }
 
+        #[cfg(target_os = "linux")]
+        if let Some(mode) = file.unix_mode() {
+            use std::os::unix::fs::PermissionsExt;
+            fs::set_permissions(&outpath, fs::Permissions::from_mode(mode)).expect("Failed to set permissions");
+        }
     }
+
+    return 0;
 }
